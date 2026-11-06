@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<div class="page-head"><h1>Notifications</h1><button class="btn btn-ghost btn-sm" id="readAll" hidden>Mark all as read</button></div>
+<div id="list"></div>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.requireLogin()) {
+  function draw() {
+    const n = S.notes();
+    document.getElementById('readAll').hidden = !S.unread();
+    document.getElementById('list').innerHTML = !n.length ? '<div class="empty card">🔔<p>You\'re all caught up.</p></div>'
+      : n.map(x => `<div class="card notif ${x.read ? '' : 'unread'}">${S.esc(x.msg)}<small class="muted">${new Date(x.at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</small></div>`).join('');
+  }
+  document.getElementById('readAll').onclick = () => { S.readAll(); location.reload(); };
+  draw();
+}
+</script>
+</body>
+</html>
