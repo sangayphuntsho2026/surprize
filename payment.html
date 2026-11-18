@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="order">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<div class="pay-wrap">
+  <form class="card pay" id="f">
+    <div class="logo-center">Surprize</div>
+    <h1>Payment</h1>
+    <div class="pay-total"><span>Total Payment</span><b id="total"></b></div>
+    <h4>Payment Method</h4>
+    <label class="choice"><input type="radio" name="method" value="bank_transfer" checked><span><b>Bank Transfer</b></span></label>
+    <div id="bankBox" class="bank-box">
+      <p>Transfer <b id="total2"></b> to:</p>
+      <p><b>Account name:</b> Surprize<br><b>Account no.:</b> 000000000 <small class="muted">(replace with your real account)</small></p>
+      <label>Transfer reference / journal no.<input name="reference" maxlength="100" placeholder="e.g. 123456789"></label>
+    </div>
+    <label class="choice"><input type="radio" name="method" value="cod"><span><b>Cash on Delivery</b></span></label>
+    <button class="btn btn-block btn-lg" type="submit" id="payBtn">Pay</button>
+    <p class="muted center"><a href="orders.html">Pay later</a></p>
+  </form>
+</div>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.requireLogin()) {
+  const o = S.order(S.qs('id')), f = document.getElementById('f');
+  if (!o) { UI.flashNext('Order not found.', 'error'); UI.go('orders.html'); }
+  else if (o.payment) UI.go('success.html?id=' + o.id);
+  else {
+    ['total','total2'].forEach(i => document.getElementById(i).textContent = S.money(o.total));
+    document.getElementById('payBtn').textContent = 'Pay ' + S.money(o.total);
+    const bank = document.getElementById('bankBox'), sync = () => {
+      const bt = f.method.value === 'bank_transfer'; bank.hidden = !bt; f.reference.required = bt; };
+    f.querySelectorAll('[name=method]').forEach(r => r.onchange = sync); sync();
+    f.onsubmit = e => { e.preventDefault(); S.pay(o.id, f.method.value, f.reference.value.trim()); UI.go('success.html?id=' + o.id); };
+  }
+}
+</script>
+</body>
+</html>

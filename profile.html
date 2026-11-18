@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Profile · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<h1>My Profile</h1>
+<section class="card profile-top" id="top2"></section>
+<section class="stats" id="stats"></section>
+<div class="two-col">
+  <section class="card"><div class="row between"><h3>My Recent Surprises</h3><a href="orders.html">View All</a></div><div id="recent"></div></section>
+  <section class="card">
+    <h3>Account Settings</h3>
+    <details><summary>✏️ Edit Profile</summary>
+      <form class="stack" id="pf">
+        <label>Name<input name="name" required></label><label>Phone<input name="phone" required></label>
+        <label>Address<input name="address"></label><label>About me<textarea name="bio" rows="2" maxlength="255"></textarea></label>
+        <button class="btn btn-sm">Save</button></form></details>
+    <details><summary>🔒 Change Password</summary>
+      <form class="stack" id="pw">
+        <label>Current password<input type="password" name="cur" required></label>
+        <label>New password<input type="password" name="n1" minlength="6" required></label>
+        <label>Confirm new password<input type="password" name="n2" minlength="6" required></label>
+        <button class="btn btn-sm">Update password</button></form></details>
+    <details><summary>🛡️ Privacy Setting</summary><p class="muted">We only use your details to plan and deliver your surprises.</p></details>
+    <details><summary>❓ Help and Support</summary><p>📞 +975 77299782<br>✉️ support.surprize@gmail.com</p></details>
+    <a class="setting-link" href="#" id="out">↪ Log Out</a>
+  </section>
+</div>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.requireLogin()) {
+  const u = S.user(), os = S.orders(), today = new Date().toISOString().slice(0,10);
+  document.getElementById('top2').innerHTML = `<div class="big-avatar">👤</div><div class="grow"><h2>${S.esc(u.name)}</h2>
+    <p class="muted">✉️ ${S.esc(u.email)}<br>📞 ${S.esc(u.phone)}<br>📍 ${S.esc(u.address || 'No address yet')}<br>🗓️ Joined on ${S.fdate(u.joined.slice(0,10))}</p></div>
+    <blockquote class="grow">${S.esc(u.bio || "I love creating surprises and making special moments unforgettable! Let's spread happiness everywhere.")}</blockquote>`;
+  const stats = [['🎁','Surprises Created',os.length],['📅','Upcoming Surprises',os.filter(o=>!['Delivered','Cancelled'].includes(o.status)&&o.date>=today).length],
+                 ['✅','Completed Surprises',os.filter(o=>o.status==='Delivered').length],['💙','Favorites',S.favs().length]];
+  document.getElementById('stats').innerHTML = stats.map(([i,l,n]) => `<div class="card stat"><span class="big">${i}</span><div><b>${n}</b><small>${l}</small></div></div>`).join('');
+  document.getElementById('recent').innerHTML = !os.length ? '<div class="empty">😶<p>No surprises yet.</p></div>'
+    : os.slice(0,5).map(o => `<div class="row between line"><span><b>${S.esc(o.title)}</b><br><small class="muted">${S.esc(o.type)} · ${S.fdate(o.date)}</small></span>${UI.badge(o.status)}</div>`).join('');
+
+  const pf = document.getElementById('pf'); pf.name.value = u.name; pf.phone.value = u.phone; pf.address.value = u.address || ''; pf.bio.value = u.bio || '';
+  pf.onsubmit = e => { e.preventDefault(); S.updateUser({name:pf.name.value.trim(), phone:pf.phone.value, address:pf.address.value, bio:pf.bio.value}); UI.flashNext('Profile updated.', 'ok'); location.reload(); };
+  const pw = document.getElementById('pw');
+  pw.onsubmit = e => { e.preventDefault();
+    if (pw.cur.value !== u.password) return UI.flash('Current password is incorrect.', 'error');
+    if (pw.n1.value !== pw.n2.value) return UI.flash('New passwords do not match.', 'error');
+    S.updateUser({password: pw.n1.value}); pw.reset(); UI.flash('Password changed.', 'ok'); };
+  document.getElementById('out').onclick = e => { e.preventDefault(); S.logout(); UI.go('index.html'); };
+}
+</script>
+</body>
+</html>

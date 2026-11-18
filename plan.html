@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan Your Surprise · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="surprises">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<h1>Plan Your Surprise</h1>
+<p class="muted">Create a unique surprise by customizing every detail.</p>
+<div id="steps"></div>
+<form class="card form-card" id="f">
+  <h3>1. Surprise Details</h3>
+  <div class="grid3">
+    <label>Surprise Title<input name="title" required maxlength="100" placeholder="e.g. Pem's 20th birthday"></label>
+    <label>Occasions<select name="type" id="occasionType" required><option value="">Select…</option></select></label>
+    <label>Surprise For<input name="forWho" required maxlength="100" placeholder="Friend, partner, mom…"></label>
+    <label>Preferred Date<input type="date" name="date" required></label>
+    <label>Preferred Time<input type="time" name="time"></label>
+    <label>Your Budget (Nu.)<input type="number" name="budget" id="budget" min="100" step="50" required></label>
+  </div>
+  <h3>2. Recipient Information</h3>
+  <div class="grid3">
+    <label>Recipient Name<input name="rname" required maxlength="100"></label>
+    <label>Phone Number<input name="rphone" required placeholder="+975 17xxxxxx"></label>
+    <label>Delivery Address<input name="raddress" required maxlength="255"></label>
+  </div>
+  <label>Special Instructions (Optional)
+    <textarea name="instructions" maxlength="200" rows="3" data-counter="#c1"></textarea><span class="counter" id="c1">0/200</span></label>
+  <h3>3. Your Message</h3>
+  <label>Message on Card
+    <textarea name="message" id="cardMessage" maxlength="250" rows="3" data-counter="#c2"></textarea><span class="counter" id="c2">0/250</span></label>
+  <div class="form-actions"><button class="btn btn-lg" type="submit">Save &amp; Continue →</button></div>
+  <div class="ai-box">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><b>Need help with ideas or suggestion?</b><br><span class="muted">Get help from our AI Assistant to make your surprise even more special</span></div>
+    <button class="btn btn-ghost" type="button" id="aiBtn">✨ Get help from AI Assistant</button>
+  </div>
+  <div id="aiResult" class="ai-result" hidden></div>
+</form>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.requireLogin()) {
+  if (S.qs('new')) S.clearDraft();
+  const f = document.getElementById('f'), u = S.user(), d = S.draft() || {};
+  document.getElementById('steps').innerHTML = UI.stepper(1);
+  const sel = f.type;
+  S.OCCASIONS.forEach(o => sel.add(new Option(o, o)));
+  f.date.min = new Date().toISOString().slice(0,10);
+  const v = {title:d.title, type:d.type || S.qs('type'), forWho:d.forWho, date:d.date, time:d.time, budget:d.budget,
+             rname:d.rname, rphone:d.rphone, raddress:d.raddress || u.address, instructions:d.instructions, message:d.message};
+  Object.entries(v).forEach(([k, val]) => { if (val != null) f[k].value = val; });
+  f.querySelectorAll('textarea').forEach(t => t.dispatchEvent(new Event('input')));
+
+  f.onsubmit = e => {
+    e.preventDefault();
+    const x = Object.fromEntries(new FormData(f));
+    if (x.date < new Date().toISOString().slice(0,10)) return UI.flash('The date cannot be in the past.', 'error');
+    if (!/^[+0-9 ()-]{7,20}$/.test(x.rphone)) return UI.flash('Please enter a valid recipient phone number.', 'error');
+    S.saveDraft({...x, title:x.title.trim(), budget:+x.budget});
+    UI.go('items.html');
+  };
+
+  document.getElementById('aiBtn').onclick = () => {
+    const box = document.getElementById('aiResult'); box.hidden = false;
+    if (!f.type.value) { box.textContent = 'Please choose an occasion first, then ask again.'; return; }
+    const budget = +f.budget.value || 0, r = S.suggest(f.type.value, budget);
+    const li = g => `<li>${g.emoji} ${S.esc(g.name)} – ${S.money(g.price)}</li>`;
+    let h = r.bundle.length ? `<b>Idea bundle${budget ? ' within ' + S.money(budget) : ''} (${S.money(r.spent)}):</b><ul>${r.bundle.map(li).join('')}</ul>`
+          : r.ideas.length ? `<b>Gift ideas:</b><ul>${r.ideas.map(li).join('')}</ul>` : 'No gifts match that budget yet – try a higher budget.<br>';
+    h += '<b>Card message ideas</b> (click to use):<ul>' + r.messages.map(m => `<li><button type="button" class="link" data-m="${S.esc(m)}">${S.esc(m)}</button></li>`).join('') + '</ul>';
+    box.innerHTML = h;
+    box.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { f.message.value = b.dataset.m; f.message.dispatchEvent(new Event('input')); });
+  };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Place your Order · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="order">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<div class="page-head">
+  <div><h1>Place your Order</h1><p class="muted">Please review your details and confirm your order.</p></div>
+  <a class="btn btn-ghost" href="items.html">← Back</a>
+</div>
+<div id="steps"></div>
+<form class="order-grid" id="f">
+  <div class="order-left">
+    <section class="card pad0"><h3 class="card-title">Recipient Information</h3><div class="pad">
+      <label>Recipient Name<input name="rname" required></label>
+      <label>Phone Number<input name="rphone" required></label>
+      <label>Delivery Address<textarea name="raddress" rows="2" required></textarea></label>
+      <label>Special Instructions (Optional)<textarea name="instructions" rows="3" maxlength="200"></textarea></label>
+    </div></section>
+    <section class="card pad0"><h3 class="card-title">Delivery Method</h3>
+      <div class="pad choice-row">
+        <label class="choice"><input type="radio" name="method" value="home" checked><span><b>Home Delivery</b><small>Get your order at your doorstep</small></span></label>
+        <label class="choice"><input type="radio" name="method" value="future"><span><b>Future Delivery</b><small>Place your order beforehand</small></span></label>
+      </div>
+      <p class="pad muted" id="when"></p>
+    </section>
+  </div>
+  <div class="order-right">
+    <section class="card" id="summary"></section>
+    <div class="secure">✅ Safe &amp; Secure payment</div>
+    <section class="card"><h3>Need Help?</h3><p>📞 +975 77299782<br>✉️ support.surprize@gmail.com</p></section>
+  </div>
+  <div class="order-actions"><a class="btn btn-ghost" href="items.html">← Back</a><button class="btn btn-lg" type="submit">Confirm →</button></div>
+</form>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.requireLogin()) {
+  const d = S.draft();
+  if (!d) { UI.flashNext('Plan a surprise first.'); UI.go('plan.html?new=1'); }
+  else if (!d.items.length) { UI.flashNext('Add at least one item to continue.'); UI.go('items.html'); }
+  else {
+    const f = document.getElementById('f'), lines = S.lines(d.items), sub = S.subtotal(d.items), total = sub + S.CHARGE;
+    document.getElementById('steps').innerHTML = UI.stepper(3);
+    f.rname.value = d.rname || ''; f.rphone.value = d.rphone || ''; f.raddress.value = d.raddress || ''; f.instructions.value = d.instructions || '';
+    document.getElementById('when').innerHTML = `Delivery on <b>${S.fdate(d.date)}</b>${d.time ? ' at <b>' + S.esc(d.time) + '</b>' : ''}.`;
+    document.getElementById('summary').innerHTML = '<h3>Order Summary</h3>' +
+      lines.map(l => `<div class="sum-item"><div class="thumb"><div class="emoji-art">${l.emoji}</div></div><div><b>${S.esc(l.name)}</b><small>Qty: ${l.qty}</small></div><span class="price">${S.money(l.price * l.qty)}/-</span></div>`).join('') +
+      `<hr><div class="sum-row"><span>Subtotal</span><span>${S.money(sub)}/-</span></div>
+       <div class="sum-row"><span>Delivery Charge</span><span>${S.money(S.CHARGE)}/-</span></div>
+       <div class="sum-row"><span>Discount</span><span class="ok-text">${S.money(0)}/-</span></div>
+       <div class="sum-row total"><span>Total Amount</span><span class="price">${S.money(total)}/-</span></div>` +
+      (sub > d.budget ? `<p class="flash error">Heads up: your items (${S.money(sub)}) are over your budget of ${S.money(d.budget)}.</p>` : '');
+    f.onsubmit = e => {
+      e.preventDefault();
+      if (!/^[+0-9 ()-]{7,20}$/.test(f.rphone.value)) return UI.flash('Please enter a valid phone number.', 'error');
+      const o = S.placeOrder({rname:f.rname.value.trim(), rphone:f.rphone.value, raddress:f.raddress.value.trim(), instructions:f.instructions.value, method:f.method.value});
+      UI.go('payment.html?id=' + o.id);
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Orders · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="order">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<h1>My Orders</h1>
+<div id="drafts"></div>
+<div id="list"></div>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.requireLogin()) {
+  function draw() {
+    const d = S.draft(), os = S.orders();
+    document.getElementById('drafts').innerHTML = d ? `<section class="card"><h3>Unfinished surprise</h3><div class="row between"><span><b>${S.esc(d.title)}</b> · ${S.fdate(d.date)}</span><a class="btn btn-sm" href="plan.html">Continue</a></div></section>` : '';
+    document.getElementById('list').innerHTML = !os.length
+      ? '<div class="empty card">📦<p>No orders yet.</p><a class="btn" href="plan.html?new=1">Plan a surprise</a></div>'
+      : os.map(o => {
+          const idx = S.FLOW.indexOf(o.status);
+          return `<section class="card order-card"><div class="row between">
+            <div><h3>${S.esc(o.title)} <small class="muted">#${o.id}</small></h3><p class="muted">${S.esc(o.type)} · to ${S.esc(o.rname)} · ${S.fdate(o.date)}</p></div>
+            <div class="right">${UI.badge(o.status)}<div class="price">${S.money(o.total)}</div></div></div>
+            ${o.status !== 'Cancelled' ? '<ol class="timeline">' + S.FLOW.map((s, i) => `<li class="${i <= idx ? 'done' : ''}"><i></i><span>${s}</span></li>`).join('') + '</ol>' : ''}
+            <p class="muted">Payment: ${o.payment ? S.esc(o.payment.status) + ' (' + (o.payment.method === 'cod' ? 'Cash on delivery' : 'Bank transfer') + ')' : '<b>Not paid yet</b>'}</p>
+            <div class="row">
+              ${!o.payment && o.status !== 'Cancelled' ? `<a class="btn btn-sm" href="payment.html?id=${o.id}">Pay now</a>` : ''}
+              ${['Pending','Packaging'].includes(o.status) ? `<button class="btn btn-ghost btn-sm" data-cancel="${o.id}">Cancel order</button>` : ''}
+              ${['Pending','Packaging','Dispatched'].includes(o.status) ? `<button class="btn btn-ghost btn-sm" data-adv="${o.id}" title="Demo only – the admin does this in the real system">▶ Demo: next status</button>` : ''}
+            </div></section>`; }).join('');
+    document.querySelectorAll('[data-cancel]').forEach(b => b.onclick = () => { if (confirm('Cancel this order?')) { S.cancel(+b.dataset.cancel); draw(); } });
+    document.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { S.advance(+b.dataset.adv); draw(); });
+  }
+  draw();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="home">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="pill">♥ Make every occasion special</span>
+    <h1>Make Every <em>Occasion</em> <span>Unforgettable</span></h1>
+    <p>From gifts to celebration – we help you plan unforgettable moments with ease.</p>
+    <div id="heroBtns"></div>
+  </div>
+  <div class="hero-art" aria-hidden="true">🎁🎈🥂</div>
+</section>
+
+<h2 class="center">Why choose Surprize?</h2>
+<section class="why">
+  <div class="why-card"><div class="big">💡</div><h3>Creative Idea</h3><p>Get unique gifts and celebrate ideas for every occasion.</p></div>
+  <div class="why-card"><div class="big">⏱️</div><h3>Save Time</h3><p>We help you plan and organize surprises in no time.</p></div>
+  <div class="why-card"><div class="big">💰</div><h3>Budget Friendly</h3><p>Plan the perfect surprise within your budget.</p></div>
+  <div class="why-card"><div class="big">🚚</div><h3>On-time delivery</h3><p>We ensure gifts and decorations reach on time.</p></div>
+  <div class="why-card"><div class="big">💭</div><h3>Memorable Moment</h3><p>Create unforgettable memories for your loved ones.</p></div>
+</section>
+
+<section class="occasions">
+  <h2 class="center">Popular Occasions</h2>
+  <div class="occ-grid" id="occ"></div>
+</section>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+document.getElementById('heroBtns').innerHTML = S.user()
+  ? '<a class="btn btn-lg" href="plan.html?new=1">Plan a surprize</a>'
+  : '<a class="btn btn-lg" href="login.html">Log in</a> <a class="btn btn-ghost btn-lg" href="register.html">Sign up</a>';
+const occ = [['Birthday','🎂','linear-gradient(135deg,#9ad0ec,#e8f4fb)'],['Anniversary','🌹','linear-gradient(135deg,#d96a7c,#f6c9d0)'],
+  ['Graduation','🎓','linear-gradient(135deg,#444,#bbb)'],['Proposal','💍','linear-gradient(135deg,#f3a46a,#fbe0c8)'],['Other Event','🎆','linear-gradient(135deg,#2b1b52,#8a3ab9)']];
+document.getElementById('occ').innerHTML = occ.map(([n,i,bg]) =>
+  `<a class="occ-card" href="plan.html?new=1&type=${encodeURIComponent(n)}"><div class="occ-img" style="background:${bg}">${i}</div><div class="occ-name">${n}</div></a>`).join('');
+</script>
+</body>
+</html>

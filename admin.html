@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard | Surprize</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root{--ad-ink:#202033;--ad-muted:#77778b;--ad-purple:#7653d6;--ad-line:#eceaf3;--ad-bg:#f7f6fb}
+    body{background:var(--ad-bg);color:var(--ad-ink);font-size:16px}
+    .admin-wrap{min-height:100vh}.admin-login{max-width:440px;margin:7vh auto;padding:34px;background:#fff;border:1px solid var(--ad-line);border-radius:22px;box-shadow:0 16px 50px #2b1b5012}
+    .brand-mark{font-size:30px;font-weight:900;color:var(--ad-purple);margin-bottom:8px}.admin-login h1{font-size:28px;margin:8px 0}.admin-login p,.muted{color:var(--ad-muted)}
+    .admin-login label,.field label{display:block;font-weight:700;margin:15px 0 7px}.admin-login input,.field input,.field select,.field textarea,.toolbar input,.toolbar select{width:100%;padding:13px 14px;border:1px solid #dcd9e8;border-radius:11px;background:#fff;font:inherit;color:var(--ad-ink)}
+    .admin-btn{border:0;border-radius:11px;padding:12px 17px;background:var(--ad-purple);color:#fff;font-weight:800;cursor:pointer;font-size:15px}.admin-btn:hover{filter:brightness(.96)}.admin-btn.secondary{background:#efebfa;color:#5736b5}.admin-btn.danger{background:#fff0f0;color:#b42318}.admin-btn.full{width:100%;margin-top:20px}
+    .demo-hint{background:#f4f0ff;border-radius:12px;padding:12px 14px;font-size:13px;margin-top:18px;line-height:1.7}.error{color:#b42318;min-height:22px;margin-top:10px}
+    .admin-shell{display:grid;grid-template-columns:255px minmax(0,1fr);min-height:100vh}.admin-side{background:#211b35;color:#fff;padding:27px 18px;display:flex;flex-direction:column;gap:26px}.admin-side .brand-mark{color:#fff;padding:0 12px}.side-caption{font-size:11px;letter-spacing:1.5px;color:#aaa2c0;padding:0 13px;text-transform:uppercase}.side-nav{display:grid;gap:7px}.side-nav button{border:0;background:transparent;color:#d9d3e8;text-align:left;padding:13px 14px;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer}.side-nav button.active,.side-nav button:hover{background:#3b3155;color:#fff}.side-bottom{margin-top:auto}.admin-main{min-width:0;padding:28px 34px 50px}.admin-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.admin-top h1{font-size:30px;margin:0}.admin-top p{margin:6px 0 0;color:var(--ad-muted)}.admin-content{max-width:1400px;margin:auto}.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px;margin-bottom:22px}.stat-card,.panel{background:#fff;border:1px solid var(--ad-line);border-radius:17px;padding:21px;box-shadow:0 5px 20px #211b3506}.stat-card .stat-label{color:var(--ad-muted);font-weight:700;font-size:14px}.stat-card strong{display:block;font-size:29px;margin-top:10px}.stat-icon{font-size:23px;float:right;background:#f1edfc;border-radius:11px;padding:9px}.panel{margin-bottom:20px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}.panel h2{font-size:19px;margin:0}.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:15px}.toolbar input{max-width:340px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:680px}th,td{text-align:left;padding:14px 12px;border-bottom:1px solid #f0eef5;font-size:14px;vertical-align:middle}th{color:var(--ad-muted);font-size:12px;text-transform:uppercase;letter-spacing:.6px}td strong{font-size:14px}.pill{display:inline-block;padding:6px 10px;border-radius:30px;background:#f0edfa;color:#6043b4;font-size:12px;font-weight:800}.pill.green{background:#e8f7ee;color:#187443}.pill.orange{background:#fff4df;color:#9b6500}.pill.red{background:#fff0f0;color:#b42318}.actions{display:flex;gap:7px;flex-wrap:wrap}.small-btn{border:0;border-radius:8px;padding:8px 10px;cursor:pointer;font-weight:700;background:#f0edfa;color:#5c40ad}.small-btn.red{background:#fff0f0;color:#b42318}.empty{text-align:center;color:var(--ad-muted);padding:35px 10px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.field.full{grid-column:1/-1}.field textarea{min-height:85px;resize:vertical}.form-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px}.report-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}.bar-row{display:grid;grid-template-columns:105px 1fr 90px;gap:12px;align-items:center;margin:15px 0;font-size:13px}.bar-track{height:12px;border-radius:20px;background:#f0eef5;overflow:hidden}.bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#8d6be5,#b18cf4)}.mobile-menu{display:none}
+    @media(max-width:900px){.admin-shell{grid-template-columns:1fr}.admin-side{padding:14px 16px;gap:10px}.admin-side .brand-mark{padding:0}.side-caption,.side-bottom{display:none}.side-nav{display:flex;overflow-x:auto}.side-nav button{white-space:nowrap;padding:10px 12px}.admin-main{padding:22px 17px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-grid{grid-template-columns:1fr}}
+    @media(max-width:520px){.admin-login{margin:20px 12px;padding:25px 20px}.admin-top{align-items:flex-start}.admin-top h1{font-size:24px}.stats-grid{gap:10px}.stat-card{padding:15px}.stat-card strong{font-size:23px}.stat-icon{font-size:18px;padding:6px}.field-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.toolbar{align-items:stretch;flex-direction:column}.toolbar input{max-width:none}}
+
+    /* Colourful Surprize admin theme */
+    :root{
+      --ad-ink:#252044;--ad-muted:#77738f;--ad-purple:#7047d8;
+      --ad-line:#e8e2f5;--ad-bg:#f1effb;
+    }
+    body{
+      background:linear-gradient(135deg,#f4f0ff 0%,#eef5ff 48%,#fff1f7 100%);
+      background-attachment:fixed;color:var(--ad-ink)
+    }
+    .admin-login{
+      position:relative;overflow:hidden;
+      background:linear-gradient(145deg,#fff 0%,#fbf9ff 100%);
+      border:1px solid #e5dcff;box-shadow:0 22px 65px #5940a51f
+    }
+    .admin-login:before{
+      content:"";position:absolute;left:0;right:0;top:0;height:8px;
+      background:linear-gradient(90deg,#7047d8,#3b82f6,#ec4899,#f59e0b)
+    }
+    .brand-mark{color:#7047d8}
+    .admin-btn{
+      background:linear-gradient(135deg,#7047d8,#8b5cf6);
+      box-shadow:0 5px 13px #7047d82b;transition:transform .18s,box-shadow .18s
+    }
+    .admin-btn:hover{filter:none;transform:translateY(-1px);box-shadow:0 8px 18px #7047d83b}
+    .admin-btn.secondary{background:#eee8ff;color:#5b36b7;box-shadow:none}
+    .demo-hint{background:linear-gradient(120deg,#f0eaff,#eaf3ff);border:1px solid #e3d9ff}
+    .admin-shell{background:transparent}
+    .admin-side{
+      background:linear-gradient(180deg,#21183f 0%,#34245f 55%,#493078 100%);
+      box-shadow:8px 0 28px #30205b18
+    }
+    .admin-side .brand-mark{color:#fff}
+    .side-caption{color:#c2b5e7}
+    .side-nav button{transition:background .18s,transform .18s}
+    .side-nav button.active,.side-nav button:hover{
+      background:linear-gradient(100deg,#7652d7,#9668e8);color:#fff;
+      box-shadow:0 5px 14px #130d2c38;transform:translateX(2px)
+    }
+    .admin-main{background:linear-gradient(135deg,#f6f3ffb8,#eef5ffb8)}
+    .admin-top h1{color:#2c2050}
+    .stat-card,.panel{
+      background:#ffffffed;border:1px solid #e8e2f5;
+      box-shadow:0 8px 24px #35235f0c
+    }
+    .stat-card{position:relative;overflow:hidden;min-height:128px}
+    .stat-card:after{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#8b5cf6}
+    .stats-grid .stat-card:nth-child(1){background:linear-gradient(135deg,#fff,#f1eaff)}
+    .stats-grid .stat-card:nth-child(1):after{background:#8b5cf6}
+    .stats-grid .stat-card:nth-child(2){background:linear-gradient(135deg,#fff,#eaf3ff)}
+    .stats-grid .stat-card:nth-child(2):after{background:#3b82f6}
+    .stats-grid .stat-card:nth-child(3){background:linear-gradient(135deg,#fff,#fff1e7)}
+    .stats-grid .stat-card:nth-child(3):after{background:#f59e0b}
+    .stats-grid .stat-card:nth-child(4){background:linear-gradient(135deg,#fff,#e8fbf3)}
+    .stats-grid .stat-card:nth-child(4):after{background:#10b981}
+    .stats-grid .stat-card:nth-child(1) .stat-icon{background:#e8ddff;color:#7047d8}
+    .stats-grid .stat-card:nth-child(2) .stat-icon{background:#dcecff;color:#2563eb}
+    .stats-grid .stat-card:nth-child(3) .stat-icon{background:#ffead3;color:#c27608}
+    .stats-grid .stat-card:nth-child(4) .stat-icon{background:#d9f7e9;color:#078653}
+    .stat-card strong{color:#2d2450}
+    .panel{border-radius:19px}
+    .panel h2{color:#302451}
+    th{background:#f7f4ff}
+    tbody tr:hover{background:#faf8ff}
+    .pill{background:#eee8ff;color:#5b36b7}
+    .small-btn{background:#eee8ff;color:#5b36b7}
+    .field input:focus,.field select:focus,.field textarea:focus,
+    .admin-login input:focus,.toolbar input:focus{
+      outline:3px solid #a78bfa55;border-color:#8b5cf6
+    }
+    @media(max-width:900px){
+      .admin-side{background:linear-gradient(100deg,#21183f,#493078)}
+      .admin-main{background:linear-gradient(135deg,#f6f3ff,#eef5ff)}
+    }
+
+  </style>
+</head>
+<body>
+<div class="admin-wrap" id="app"></div>
+<script src="js/store.js"></script>
+<script>
+(() => {
+  const app = document.getElementById('app');
+  const esc = S.esc;
+  const money = S.money;
+  let page = 'dashboard';
+  let search = '';
+  const titles = {dashboard:'Dashboard',products:'Products',orders:'Orders',users:'Customers',reports:'Reports'};
+  const statusClass = s => s === 'Delivered' ? 'green' : s === 'Cancelled' ? 'red' : ['Pending','Packaging'].includes(s) ? 'orange' : '';
+  const date = v => v ? new Date(v).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+
+  function loginView(){
+    app.innerHTML = `<section class="admin-login"><div class="brand-mark">Surprize<span style="color:#262238">.</span></div><p class="muted">ADMINISTRATION PORTAL</p><h1>Welcome back</h1><p>Sign in to manage your Surprize store.</p><form id="loginForm"><label for="adminEmail">Email address</label><input id="adminEmail" type="email" autocomplete="username" required placeholder="admin@surprize.bt"><label for="adminPassword">Password</label><input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Enter admin password"><div class="error" id="loginError" role="alert"></div><button class="admin-btn full" type="submit">Sign in to dashboard</button></form><div class="demo-hint"><strong>Demo login</strong><br>Email: admin@surprize.bt<br>Password: Admin@123<br><span class="muted">Demo only. Do not use these credentials on a live website.</span></div><p style="margin:20px 0 0"><a href="index.html">← Back to customer website</a></p></section>`;
+    document.getElementById('loginForm').addEventListener('submit', e => {e.preventDefault(); const ok=S.adminLogin(document.getElementById('adminEmail').value,document.getElementById('adminPassword').value); if(ok) shell(); else document.getElementById('loginError').textContent='Incorrect admin email or password.';});
+  }
+  function shell(){
+    app.innerHTML = `<div class="admin-shell"><aside class="admin-side"><div class="brand-mark">Surprize<span style="color:#c5b5ff">.</span></div><div><div class="side-caption">Workspace</div><nav class="side-nav" aria-label="Admin navigation"><button data-page="dashboard">▦ &nbsp; Dashboard</button><button data-page="products">◇ &nbsp; Products</button><button data-page="orders">▤ &nbsp; Orders</button><button data-page="users">♙ &nbsp; Customers</button><button data-page="reports">▥ &nbsp; Reports</button></nav></div><div class="side-bottom"><button class="side-nav" id="logoutBtn" style="width:100%;text-align:left">↪ &nbsp; Sign out</button></div></aside><main class="admin-main"><div class="admin-content"><header class="admin-top"><div><h1 id="pageTitle">Dashboard</h1><p>Welcome to your Surprize store administration.</p></div><a class="admin-btn secondary" href="index.html" style="text-decoration:none">View website ↗</a></header><section id="view"></section></div></main></div>`;
+    app.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>{page=b.dataset.page;search='';render();}));
+    document.getElementById('logoutBtn').addEventListener('click',()=>{S.adminLogout();loginView();});
+    render();
+  }
+  function stats(){const x=S.adminStats();return `<div class="stats-grid"><article class="stat-card"><span class="stat-icon">♙</span><span class="stat-label">Total customers</span><strong>${x.users}</strong></article><article class="stat-card"><span class="stat-icon">◇</span><span class="stat-label">Total products</span><strong>${x.products}</strong></article><article class="stat-card"><span class="stat-icon">▤</span><span class="stat-label">Total orders</span><strong>${x.orders}</strong></article><article class="stat-card"><span class="stat-icon">Nu.</span><span class="stat-label">Verified revenue</span><strong>${money(x.revenue)}</strong></article></div>`;}
+  function dashboard(){const orders=S.adminOrders().slice(0,6);return `${stats()}<div class="panel"><div class="panel-head"><h2>Recent orders</h2><button class="admin-btn secondary" data-go="orders">View all orders</button></div>${orders.length?orderTable(orders,false):'<div class="empty">No orders yet. Customer orders will appear here.</div>'}</div><div class="panel"><div class="panel-head"><h2>Quick overview</h2></div><p class="muted">There are <strong>${S.adminStats().pending}</strong> orders waiting for processing. Review the orders page to update their status.</p><button class="admin-btn" data-go="orders">Manage pending orders</button></div>`;}
+  function orderTable(rows, full=true){return `<div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Occasion</th><th>Total</th><th>Status</th>${full?'<th>Payment</th><th>Update status</th>':''}</tr></thead><tbody>${rows.map(o=>`<tr><td><strong>#${o.id}</strong><br><span class="muted">${date(o.created)}</span></td><td>${esc(o.email)}</td><td>${esc(o.title||'Surprise')}</td><td><strong>${money(o.total||0)}</strong></td><td><span class="pill ${statusClass(o.status)}">${esc(o.status||'Pending')}</span></td>${full?`<td>${o.payment?`<select aria-label="Update payment status for order ${o.id}" data-payment-status="${o.id}" style="padding:8px;border:1px solid #ddd8e9;border-radius:8px">${['Awaiting verification','Paid','Completed','Pay on delivery','Failed'].map(s=>`<option ${o.payment.status===s?'selected':''}>${s}</option>`).join('')}</select>`:'<span class="muted">Not paid yet</span>'}</td><td><select aria-label="Update order ${o.id} status" data-order-status="${o.id}" style="padding:8px;border:1px solid #ddd8e9;border-radius:8px">${['Pending','Packaging','Dispatched','Delivered','Cancelled'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select></td>`:''}</tr>`).join('')}</tbody></table></div>`;}
+  function productsView(){const rows=S.adminProducts().filter(p=>(p.name+p.type+p.desc).toLowerCase().includes(search.toLowerCase()));return `<div class="panel"><div class="panel-head"><h2>Product catalogue</h2><button class="admin-btn" id="addProduct">+ Add product</button></div><div class="toolbar"><input id="searchBox" placeholder="Search products..." value="${esc(search)}"></div>${rows.length?`<div class="table-wrap"><table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Actions</th></tr></thead><tbody>${rows.map(p=>`<tr><td><strong>${esc(p.emoji||'🎁')} ${esc(p.name)}</strong><br><span class="muted">${esc(p.desc||'')}</span></td><td>${esc(p.type)}</td><td><strong>${money(p.price)}</strong></td><td><div class="actions"><button class="small-btn" data-edit="${p.id}">Edit</button><button class="small-btn red" data-delete="${p.id}">Delete</button></div></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No products match your search.</div>'}</div><p class="muted">Changes are saved in this browser and will appear on the customer gift catalogue.</p>`;}
+  function usersView(){const rows=S.adminUsers().filter(u=>(u.name+u.email+u.phone).toLowerCase().includes(search.toLowerCase()));return `<div class="panel"><div class="panel-head"><h2>Registered customers</h2><span class="pill">${rows.length} customers</span></div><div class="toolbar"><input id="searchBox" placeholder="Search name, email or phone..." value="${esc(search)}"></div>${rows.length?`<div class="table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Joined</th><th>Orders</th></tr></thead><tbody>${rows.map(u=>`<tr><td><strong>${esc(u.name)}</strong><br><span class="muted">${esc(u.email)}</span></td><td>${esc(u.phone||'—')}</td><td>${date(u.joined)}</td><td><span class="pill">${u.orderCount}</span></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No customers found.</div>'}</div><p class="muted">Customer passwords are never displayed in this dashboard.</p>`;}
+  function reportsView(){const all=S.adminOrders(), delivered=all.filter(o=>o.status==='Delivered'), paid=all.filter(o=>o.payment&&/paid|completed/i.test(o.payment.status));const max=Math.max(1,...['Pending','Packaging','Dispatched','Delivered','Cancelled'].map(s=>all.filter(o=>o.status===s).length));return `${stats()}<div class="report-grid"><div class="panel"><h2>Orders by status</h2>${['Pending','Packaging','Dispatched','Delivered','Cancelled'].map(s=>{const n=all.filter(o=>o.status===s).length;return `<div class="bar-row"><span>${s}</span><div class="bar-track"><div class="bar-fill" style="width:${n/max*100}%"></div></div><strong>${n}</strong></div>`}).join('')}</div><div class="panel"><h2>Sales summary</h2><p class="muted">Revenue from payments marked as paid or completed.</p><h2 style="font-size:28px;margin:18px 0">${money(S.adminStats().revenue)}</h2><p>All orders: <strong>${all.length}</strong></p><p>Delivered orders: <strong>${delivered.length}</strong></p><p>Verified payments: <strong>${paid.length}</strong></p></div></div><div class="panel"><h2>Important note</h2><p class="muted">This demo records order and payment statuses in your browser. Revenue is only counted when a payment is marked Paid or Completed by the admin. No real payment provider is connected.</p></div>`;}
+  function render(){if(!S.adminActive()){loginView();return;}document.getElementById('pageTitle').textContent=titles[page];app.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const view=document.getElementById('view');view.innerHTML=page==='dashboard'?dashboard():page==='products'?productsView():page==='orders'?`<div class="panel"><div class="panel-head"><h2>All customer orders</h2><span class="pill">${S.adminOrders().length} total</span></div>${S.adminOrders().length?orderTable(S.adminOrders()):'<div class="empty">No orders have been placed yet.</div>'}</div>`:page==='users'?usersView():reportsView();
+    view.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{page=b.dataset.go;render();}));
+    const box=view.querySelector('#searchBox');if(box)box.addEventListener('input',e=>{search=e.target.value;const pos=e.target.selectionStart;render();const next=document.getElementById('searchBox');next.focus();next.setSelectionRange(pos,pos);});
+    const add=view.querySelector('#addProduct');if(add)add.addEventListener('click',()=>productDialog());
+    view.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>productDialog(S.adminProducts().find(p=>p.id===Number(b.dataset.edit)))));
+    view.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>{const p=S.adminProducts().find(x=>x.id===Number(b.dataset.delete));if(confirm(`Delete ${p.name}?`)){S.deleteProduct(p.id);render();}}));
+    view.querySelectorAll('[data-order-status]').forEach(sel=>sel.addEventListener('change',()=>{S.updateOrderStatus(sel.dataset.orderStatus,sel.value);render();}));
+    view.querySelectorAll('[data-payment-status]').forEach(sel=>sel.addEventListener('change',()=>{S.updatePaymentStatus(sel.dataset.paymentStatus,sel.value);render();}));
+  }
+  function productDialog(p={}){const editing=!!p.id;const wrap=document.createElement('div');wrap.style='position:fixed;inset:0;background:#17112688;display:grid;place-items:center;padding:16px;z-index:20;overflow:auto';wrap.innerHTML=`<form id="productForm" style="background:white;padding:25px;border-radius:18px;width:min(560px,100%);max-height:95vh;overflow:auto"><div class="panel-head"><h2>${editing?'Edit product':'Add a product'}</h2><button type="button" class="small-btn" id="closeDialog">✕</button></div><div class="field-grid"><div class="field"><label>Product name</label><input name="name" required maxlength="80" value="${esc(p.name||'')}"></div><div class="field"><label>Category</label><input name="type" required maxlength="40" value="${esc(p.type||'')}"></div><div class="field"><label>Price (Nu.)</label><input name="price" type="number" min="0" step="1" required value="${p.price??''}"></div><div class="field"><label>Emoji</label><input name="emoji" maxlength="8" value="${esc(p.emoji||'🎁')}"></div><div class="field full"><label>Description</label><textarea name="desc" maxlength="220">${esc(p.desc||'')}</textarea></div></div><div class="form-actions"><button type="button" class="admin-btn secondary" id="cancelDialog">Cancel</button><button class="admin-btn" type="submit">${editing?'Save changes':'Add product'}</button></div><div class="error" id="productError"></div></form>`;document.body.appendChild(wrap);const close=()=>wrap.remove();wrap.querySelector('#closeDialog').onclick=close;wrap.querySelector('#cancelDialog').onclick=close;wrap.addEventListener('click',e=>{if(e.target===wrap)close();});wrap.querySelector('form').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);const err=S.saveProduct({id:p.id,name:f.get('name'),type:f.get('type'),price:f.get('price'),emoji:f.get('emoji'),desc:f.get('desc')});if(err){wrap.querySelector('#productError').textContent=err;return;}close();render();});}
+  S.adminActive()?shell():loginView();
+})();
+</script>
+</body>
+</html>
