@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Items · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="items">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<div class="page-head">
+  <div><h1 id="h">Items</h1><p class="muted" id="sub"></p></div>
+  <a class="btn btn-ghost" id="back" href="plan.html" hidden>← Back</a>
+</div>
+<div id="steps"></div>
+<div class="filters">
+  <select id="type"><option value="">All types</option></select>
+  <label class="check" id="fitWrap" hidden><input type="checkbox" id="fit"> Fits my remaining budget</label>
+  <a href="items.html" id="clear" hidden>Clear</a>
+</div>
+<div id="grid"></div>
+<div class="cart-bar" id="bar" hidden></div>
+    </main>
+  </div>
+</div>
+<!-- Gift photos: set each image path here (data-id = gift id in store.js). Gifts without a photo show their emoji. To use a real photo, replace the placeholder .svg path with your .jpg path. -->
+<div id="gift-images" hidden>
+  <img data-id="1" src="image/Tulip Glass Lamp.jpg" alt="Tulip Glass Lamp">
+  <img data-id="2" src="image/Cute Bear Night Lamp.jpg" alt="Cute Bear Night Lamp">
+  <img data-id="3" src="image/Bubble Candle.jpg" alt="Bubble Candle">
+  <img data-id="4" src="image/Heart Photo Frame.jpg" alt="Heart Photo Frame">
+  <img data-id="5" src="image/Chocolate Oreo Cake.jpg" alt="Chocolate Oreo Cake">
+  <img data-id="6" src="image/Pastel Design Cake.jpg" alt="Pastel Design Cake">
+  <img data-id="7" src="image/Crochet Flower Bouquet.jpg" alt="Crochet Flower Bouquet">
+  <img data-id="8" src="image/Red Rose Bouquet.jpg" alt="Red Rose Bouquet">
+  <img data-id="9" src="image/Cute Teddy Pair.jpg" alt="Cute Teddy Pair">
+  <img data-id="10" src="image/Graduation Teddy.jpg" alt="Graduation Teddy">
+  <img data-id="11" src="image/Balloon Decoration Set.jpg" alt="Balloon Decoration Set">
+  <img data-id="12" src="image/Proposal Setup.jpg" alt="Proposal Setup">
+  <img data-id="13" src="image/Chocolate Gift Box.jpg" alt="Chocolate Gift Box">
+  <img data-id="14" src="image/Personalised Mug.jpg" alt="Personalised Mug">
+  <img data-id="15" src="image/Greeting Card.jpg" alt="Greeting Card">
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+const q = (S.qs('q') || '').toLowerCase(), typeSel = document.getElementById('type'), fit = document.getElementById('fit');
+[...new Set(S.GIFTS.map(g => g.type))].sort().forEach(t => typeSel.add(new Option(t, t)));
+typeSel.value = S.qs('type') || '';
+
+function draw() {
+  const d = S.user() ? S.draft() : null;
+  document.getElementById('h').textContent = d ? '2. Item' : 'Items';
+  document.getElementById('sub').textContent = d ? 'Create a unique surprise by customizing every detail.' : 'Browse gifts and decorations. Log in and plan a surprise to add them.';
+  document.getElementById('back').hidden = !d;
+  document.getElementById('steps').innerHTML = d ? UI.stepper(2) : '';
+  document.getElementById('fitWrap').hidden = !d;
+
+  const spent = d ? S.subtotal(d.items) : 0, left = d ? d.budget - spent : 0;
+  let list = S.GIFTS.filter(g => (!q || (g.name + g.type + g.desc).toLowerCase().includes(q)) && (!typeSel.value || g.type === typeSel.value) && (!(d && fit.checked) || g.price <= left));
+  document.getElementById('clear').hidden = !(q || typeSel.value || fit.checked);
+  UI.giftGrid(document.getElementById('grid'), list, draw);
+
+  const bar = document.getElementById('bar'); bar.hidden = !d;
+  if (d) {
+    const n = d.items.length;
+    bar.innerHTML = `<div><b>${n} item${n === 1 ? '' : 's'} selected</b> · ${S.money(spent)} of ${S.money(d.budget)} budget ` +
+      (spent > d.budget ? `<span class="badge bad">Over budget by ${S.money(spent - d.budget)}</span>` : `<span class="badge ok">${S.money(left)} left</span>`) +
+      `</div><a class="btn ${n ? '' : 'disabled'}" href="order.html">Review order →</a>`;
+  }
+}
+typeSel.onchange = fit.onchange = draw;
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<div class="auth-wrap">
+  <form class="card auth" id="f">
+    <h1>Welcome back</h1>
+    <p class="muted">Log in to plan your next surprize.</p>
+    <label>Email<input type="email" name="email" required autofocus></label>
+    <label>Password<input type="password" name="password" required></label>
+    <button class="btn btn-block" type="submit">Log in</button>
+    <p class="muted center">New here? <a href="register.html">Create an account</a></p>
+    <p class="muted center" style="margin-top:18px;font-size:13px"><a href="admin.html">Admin access</a></p>
+  </form>
+</div>
+    </main>
+  </div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.user()) location.replace('index.html');
+document.getElementById('f').onsubmit = e => {
+  e.preventDefault();
+  const f = e.target;
+  if (S.login(f.email.value, f.password.value)) {
+    const to = sessionStorage.getItem('after_login'); sessionStorage.removeItem('after_login');
+    UI.go(to || 'index.html');
+  } else UI.flash('Incorrect email or password.', 'error');
+};
+</script>
+</body>
+</html>

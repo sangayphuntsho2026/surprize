@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account Settings · Surprize</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+.big-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 55px;
+  background: #f5e9ef;
+  border: 3px solid #f3c7df;
+}
+
+.big-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.avatar-btn {
+  cursor: pointer;
+}
+
+.account-card {
+  max-width: 750px;
+  margin: 20px auto;
+}
+
+.account-card details {
+  margin-bottom: 14px;
+}
+
+.account-card summary {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.account-card hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 20px 0;
+}
+
+.account-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#rmphoto {
+  cursor: pointer;
+}
+
+@media(max-width:560px) {
+  .account-card {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+
+<body data-active="">
+
+<div class="app">
+
+  <aside class="sidebar" id="side"></aside>
+
+  <div class="main">
+
+    <header class="topbar" id="top"></header>
+
+    <main class="content">
+
+      <h1 class="account-heading">Account Settings</h1>
+
+      <section class="card account-card">
+
+        <!-- PROFILE PHOTO -->
+
+        <div class="avatar-wrap">
+
+          <div class="big-avatar" id="avatar">
+            👤
+          </div>
+
+          <label class="btn btn-sm btn-ghost avatar-btn">
+            📷 Change Photo
+            <input
+              type="file"
+              id="photo"
+              accept="image/*"
+              hidden
+            >
+          </label>
+
+          <a href="#" id="rmphoto" class="muted">
+            Remove Photo
+          </a>
+
+        </div>
+
+        <hr>
+
+        <h3>Account Settings</h3>
+
+        <!-- EDIT PROFILE -->
+
+        <details>
+          <summary>✏️ Edit Profile</summary>
+
+          <form class="stack" id="pf">
+
+            <label>
+              Name
+              <input name="name" required>
+            </label>
+
+            <label>
+              Phone
+              <input name="phone" required>
+            </label>
+
+            <label>
+              Address
+              <input name="address">
+            </label>
+
+            <label>
+              About me
+              <textarea
+                name="bio"
+                rows="3"
+                maxlength="255"
+              ></textarea>
+            </label>
+
+            <button type="submit" class="btn btn-sm">
+              Save Changes
+            </button>
+
+          </form>
+        </details>
+
+        <!-- CHANGE PASSWORD -->
+
+        <details>
+          <summary>🔒 Change Password</summary>
+
+          <form class="stack" id="pw">
+
+            <label>
+              Current Password
+              <input
+                type="password"
+                name="cur"
+                required
+              >
+            </label>
+
+            <label>
+              New Password
+              <input
+                type="password"
+                name="n1"
+                minlength="6"
+                required
+              >
+            </label>
+
+            <label>
+              Confirm New Password
+              <input
+                type="password"
+                name="n2"
+                minlength="6"
+                required
+              >
+            </label>
+
+            <button type="submit" class="btn btn-sm">
+              Update Password
+            </button>
+
+          </form>
+        </details>
+
+        <!-- PRIVACY -->
+
+        <details>
+          <summary>🛡️ Privacy Settings</summary>
+
+          <p class="muted">
+            We only use your details to plan and deliver
+            your surprises. Your personal information
+            is used to provide our services.
+          </p>
+
+        </details>
+
+        <!-- HELP AND SUPPORT -->
+
+        <details>
+          <summary>❓ Help and Support</summary>
+
+          <p>
+            📞 +975 77299782
+          </p>
+
+          <p>
+            ✉️ support.surprize@gmail.com
+          </p>
+
+        </details>
+
+        <!-- LOGOUT -->
+
+        <a class="setting-link" href="#" id="out">
+          ↪ Log Out
+        </a>
+
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+
+<script>
+
+if (S.requireLogin()) {
+
+  const u = S.user();
+
+  // DISPLAY PROFILE PHOTO
+
+  const avatar = document.getElementById('avatar');
+  const removePhoto = document.getElementById('rmphoto');
+
+  function showPhoto(photo) {
+
+    avatar.innerHTML = photo
+      ? `<img src="${S.esc(photo)}" alt="Profile Photo">`
+      : '👤';
+
+    removePhoto.style.display =
+      photo ? 'inline' : 'none';
+
+  }
+
+  showPhoto(u.photo || '');
+
+  // CHANGE PROFILE PHOTO
+
+  document.getElementById('photo').onchange = e => {
+
+    const f = e.target.files[0];
+
+    if (!f) return;
+
+    if (!f.type.startsWith('image/')) {
+      e.target.value = '';
+      return UI.flash(
+        'Please choose an image file.',
+        'error'
+      );
+    }
+
+    const img = new Image();
+    const url = URL.createObjectURL(f);
+
+    img.onload = () => {
+
+      const s = Math.min(img.width, img.height);
+
+      const c = document.createElement('canvas');
+
+      c.width = 256;
+      c.height = 256;
+
+      c.getContext('2d').drawImage(
+        img,
+        (img.width - s) / 2,
+        (img.height - s) / 2,
+        s,
+        s,
+        0,
+        0,
+        256,
+        256
+      );
+
+      URL.revokeObjectURL(url);
+
+      const photo = c.toDataURL('image/jpeg', 0.85);
+
+      try {
+
+        S.updateUser({ photo: photo });
+
+        UI.flashNext(
+          'Profile photo updated.',
+          'ok'
+        );
+
+        location.reload();
+
+      } catch (error) {
+
+        UI.flash(
+          'Could not save the profile photo. Try a smaller image.',
+          'error'
+        );
+
+      }
+
+    };
+
+    img.onerror = () => {
+
+      URL.revokeObjectURL(url);
+
+      UI.flash(
+        'Could not read that image.',
+        'error'
+      );
+
+    };
+
+    img.src = url;
+
+  };
+
+  // REMOVE PROFILE PHOTO
+
+  removePhoto.onclick = e => {
+
+    e.preventDefault();
+
+    S.updateUser({ photo: '' });
+
+    UI.flashNext(
+      'Profile photo removed.',
+      'ok'
+    );
+
+    location.reload();
+
+  };
+
+  // EDIT PROFILE
+
+  const pf = document.getElementById('pf');
+
+  pf.name.value = u.name || '';
+  pf.phone.value = u.phone || '';
+  pf.address.value = u.address || '';
+  pf.bio.value = u.bio || '';
+
+  pf.onsubmit = e => {
+
+    e.preventDefault();
+
+    S.updateUser({
+
+      name: pf.name.value.trim(),
+
+      phone: pf.phone.value.trim(),
+
+      address: pf.address.value.trim(),
+
+      bio: pf.bio.value.trim()
+
+    });
+
+    UI.flashNext(
+      'Profile updated successfully.',
+      'ok'
+    );
+
+    location.reload();
+
+  };
+
+  // CHANGE PASSWORD
+
+  const pw = document.getElementById('pw');
+
+  pw.onsubmit = e => {
+
+    e.preventDefault();
+
+    const currentUser = S.user();
+
+    if (pw.cur.value !== currentUser.password) {
+
+      return UI.flash(
+        'Current password is incorrect.',
+        'error'
+      );
+
+    }
+
+    if (pw.n1.value !== pw.n2.value) {
+
+      return UI.flash(
+        'New passwords do not match.',
+        'error'
+      );
+
+    }
+
+    S.updateUser({
+      password: pw.n1.value
+    });
+
+    pw.reset();
+
+    UI.flash(
+      'Password changed successfully.',
+      'ok'
+    );
+
+  };
+
+  // LOG OUT
+
+  document.getElementById('out').onclick = e => {
+
+    e.preventDefault();
+
+    S.logout();
+
+    UI.go('index.html');
+
+  };
+
+}
+
+</script>
+
+</body>
+</html>
