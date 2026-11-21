@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Profile · Surprize</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+.pf-head { display:flex; gap:28px; align-items:center; flex-wrap:wrap; padding:28px; border-radius:22px; }
+.pf-photo { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.big-avatar { width:110px; height:110px; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:50px; background:#f5e9ef; border:3px solid #f3c7df; }
+.big-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+.avatar-btn, #rmphoto { cursor:pointer; }
+#rmphoto { font-size:13px; }
+.pf-info { flex:1; min-width:230px; }
+.pf-info h2 { margin:0 0 10px; font-size:2rem; }
+.pf-info p { margin:6px 0; display:flex; gap:10px; align-items:center; word-break:break-all; }
+.pf-bio { flex:1.2; min-width:230px; border-left:2px solid var(--line); padding-left:20px; line-height:1.6; }
+
+.pf-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin:20px 0; }
+.pf-stat { display:flex; gap:14px; align-items:center; padding:24px; border-radius:20px; }
+.pf-stat i { font-style:normal; font-size:36px; }
+.pf-stat b { display:block; font-size:1.8rem; color:#b0147a; line-height:1.1; }
+.pf-stat span { font-size:13px; font-weight:700; }
+
+.pf-cols { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
+.pf-cols .card { padding:22px; }
+.pf-cols h3 { margin:0; }
+.pf-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.pf-empty { text-align:center; padding:40px 0 30px; }
+.pf-empty div { font-size:44px; }
+.pf-recent { display:flex; justify-content:space-between; gap:10px; align-items:center; padding:12px 0; border-top:1px solid var(--line); }
+.pf-cols details { border:1px solid var(--line); border-radius:10px; margin-top:10px; padding:4px 14px; }
+.pf-cols summary { padding:12px 0; cursor:pointer; font-weight:700; }
+.pf-cols form.stack { padding-bottom:14px; }
+@media (max-width:900px) { .pf-cols { grid-template-columns:1fr; } .pf-bio { border-left:0; padding-left:0; } }
+</style>
+</head>
+
+<body data-active="">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+      <h1>My Profile</h1>
+
+      <!-- Profile card -->
+      <section class="card pf-head">
+        <div class="pf-photo">
+          <div class="big-avatar" id="avatar">👤</div>
+          <label class="btn btn-sm btn-ghost avatar-btn">
+            📷 Change Photo
+            <input type="file" id="photo" accept="image/*" hidden>
+          </label>
+          <a href="#" id="rmphoto" class="muted">Remove Photo</a>
+        </div>
+        <div class="pf-info">
+          <h2 id="vName"></h2>
+          <p>✉️ <span id="vEmail"></span></p>
+          <p>📞 <span id="vPhone"></span></p>
+          <p>📍 <span id="vAddr"></span></p>
+          <p>📅 <span id="vJoined"></span></p>
+        </div>
+        <div class="pf-bio" id="vBio"></div>
+      </section>
+
+      <!-- Stats -->
+      <section class="pf-stats">
+        <div class="card pf-stat"><i>🎁</i><div><b id="s1">0</b><span>Surprises Created</span></div></div>
+        <div class="card pf-stat"><i>📅</i><div><b id="s2">0</b><span>Upcoming Surprises</span></div></div>
+        <div class="card pf-stat"><i>✅</i><div><b id="s3">0</b><span>Completed Surprises</span></div></div>
+        <div class="card pf-stat"><i>💙</i><div><b id="s4">0</b><span>Favorites</span></div></div>
+      </section>
+
+      <div class="pf-cols">
+        <!-- Recent surprises -->
+        <section class="card">
+          <div class="pf-row"><h3>My Recent Surprises</h3><a href="orders.html">View All</a></div>
+          <div id="recent"></div>
+        </section>
+
+        <!-- Account settings -->
+        <section class="card">
+          <h3>Account Settings</h3>
+
+          <details>
+            <summary>✏️ Edit Profile</summary>
+            <form class="stack" id="pf">
+              <label>Name<input name="name" required></label>
+              <label>Phone<input name="phone" required></label>
+              <label>Address<input name="address"></label>
+              <label>About me<textarea name="bio" rows="3" maxlength="255"></textarea></label>
+              <button type="submit" class="btn btn-sm">Save Changes</button>
+            </form>
+          </details>
+
+          <details>
+            <summary>🔒 Change Password</summary>
+            <form class="stack" id="pw">
+              <label>Current Password<input type="password" name="cur" required></label>
+              <label>New Password<input type="password" name="n1" minlength="6" required></label>
+              <label>Confirm New Password<input type="password" name="n2" minlength="6" required></label>
+              <button type="submit" class="btn btn-sm">Update Password</button>
+            </form>
+          </details>
+
+          <details>
+            <summary>🛡️ Privacy Settings</summary>
+            <p class="muted">We only use your details to plan and deliver your surprises. Your personal information is used to provide our services.</p>
+          </details>
+
+          <details>
+            <summary>❓ Help and Support</summary>
+            <p>📞 +975 77299782</p>
+            <p>✉️ support.surprize@gmail.com</p>
+          </details>
+
+          <details>
+            <summary>↪ Log Out</summary>
+            <p><button class="btn btn-sm" id="out" type="button">Yes, log out</button></p>
+          </details>
+        </section>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/api.js"></script>
+<script>
+(async () => {
+  // 1. Must be logged in on the server
+  let u;
+  try {
+    u = (await API.me()).user;
+  } catch {
+    sessionStorage.setItem('after_login', 'profile.html');
+    location.replace('login.html');
+    return;
+  }
+  const $ = id => document.getElementById(id);
+
+  // 2. Fill the profile card
+  const joinedRaw = u.created_at || u.createdAt || u.joined;
+  $('vName').textContent = u.name || '';
+  $('vEmail').textContent = u.email || '';
+  $('vPhone').textContent = u.phone || 'No phone yet';
+  $('vAddr').textContent = u.address || 'No address yet';
+  $('vJoined').textContent = joinedRaw
+    ? 'Joined on ' + new Date(joinedRaw).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+    : '';
+  $('vBio').textContent = u.bio || 'Tell people a little about yourself. Use Edit Profile to add a bio.';
+
+  // 3. Stats + recent surprises (from your orders and favorites)
+  let orders = [], favs = [];
+  try { orders = S.orders() || []; } catch {}
+  try { favs = S.favs() || []; } catch {}
+  const doneStatus = S.FLOW[S.FLOW.length - 1];            // last step, e.g. "Delivered"
+  const completed = orders.filter(o => o.status === doneStatus).length;
+  const upcoming  = orders.filter(o => o.status !== doneStatus && o.status !== 'Cancelled').length;
+  $('s1').textContent = orders.length;
+  $('s2').textContent = upcoming;
+  $('s3').textContent = completed;
+  $('s4').textContent = favs.length;
+
+  const recent = [...orders].sort((a, b) => b.id - a.id).slice(0, 5);
+  $('recent').innerHTML = recent.length
+    ? recent.map(o => `<div class="pf-recent">
+        <div><b>${S.esc(o.title)}</b><br><small class="muted">${S.esc(o.type)} · ${S.fdate(o.date)}</small></div>
+        ${UI.badge(o.status)}</div>`).join('')
+    : '<div class="pf-empty muted"><div>😮</div>No surprises yet.</div>';
+
+  // 4. Profile photo (the backend has no photo field, so it is stored in this browser)
+  const photoKey = 'surprize_photo_' + u.id;
+  const avatar = $('avatar'), removePhoto = $('rmphoto');
+  const getPhoto = () => { try { return localStorage.getItem(photoKey) || ''; } catch { return ''; } };
+  function showPhoto(photo) {
+    avatar.textContent = '';
+    if (photo) {
+      const img = document.createElement('img');
+      img.src = photo; img.alt = 'Profile Photo';
+      avatar.appendChild(img);
+    } else avatar.textContent = '👤';
+    removePhoto.style.display = photo ? 'inline' : 'none';
+  }
+  showPhoto(getPhoto());
+
+  $('photo').onchange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (!f.type.startsWith('image/')) { e.target.value = ''; return UI.flash('Please choose an image file.', 'error'); }
+    const img = new Image(), url = URL.createObjectURL(f);
+    img.onload = () => {
+      const s = Math.min(img.width, img.height), c = document.createElement('canvas');
+      c.width = 256; c.height = 256;
+      c.getContext('2d').drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 256, 256);
+      URL.revokeObjectURL(url);
+      try {
+        localStorage.setItem(photoKey, c.toDataURL('image/jpeg', 0.85));
+        UI.flashNext('Profile photo updated.', 'ok');
+        location.reload();
+      } catch { UI.flash('Could not save the profile photo. Try a smaller image.', 'error'); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); UI.flash('Could not read that image.', 'error'); };
+    img.src = url;
+  };
+  removePhoto.onclick = e => {
+    e.preventDefault();
+    try { localStorage.removeItem(photoKey); } catch {}
+    UI.flashNext('Profile photo removed.', 'ok');
+    location.reload();
+  };
+
+  // 5. Edit profile -> PUT /api/auth/profile
+  const pf = $('pf');
+  pf.name.value = u.name || '';
+  pf.phone.value = u.phone || '';
+  pf.address.value = u.address || '';
+  pf.bio.value = u.bio || '';
+  pf.onsubmit = async e => {
+    e.preventDefault();
+    try {
+      await API.updateProfile({
+        name: pf.name.value.trim(), phone: pf.phone.value.trim(),
+        address: pf.address.value.trim(), bio: pf.bio.value.trim()
+      });
+      UI.flashNext('Profile updated successfully.', 'ok');
+      location.reload();
+    } catch (err) { UI.flash(err.message, 'error'); }
+  };
+
+  // 6. Change password -> PATCH /api/auth/password
+  const pw = $('pw');
+  pw.onsubmit = async e => {
+    e.preventDefault();
+    if (pw.n1.value !== pw.n2.value) return UI.flash('New passwords do not match.', 'error');
+    try {
+      await API.changePassword(pw.cur.value, pw.n1.value);
+      pw.reset();
+      UI.flash('Password changed successfully.', 'ok');
+    } catch (err) { UI.flash(err.message, 'error'); }
+  };
+
+  // 7. Log out -> POST /api/auth/logout
+  $('out').onclick = async () => {
+    try { await API.logout(); } catch {}
+    try { S.logout(); } catch {}
+    UI.go('index.html');
+  };
+})();
+</script>
+</body>
+</html>

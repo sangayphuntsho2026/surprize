@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Favorites · Surprize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-active="favorites">
+<div class="app">
+  <aside class="sidebar" id="side"></aside>
+  <div class="main">
+    <header class="topbar" id="top"></header>
+    <main class="content">
+
+<h1>Favorites</h1><p class="muted">Gifts you've saved for later.</p>
+<div id="grid"></div>
+    </main>
+  </div>
+</div>
+<!-- Gift photos: set each image path here (data-id = gift id in store.js). Gifts without a photo show their emoji. To use a real photo, replace the placeholder .svg path with your .jpg path. -->
+<div id="gift-images" hidden>
+  <img data-id="1" src="image/Tulip Glass Lamp.jpg" alt="Tulip Glass Lamp">
+  <img data-id="2" src="image/Cute Bear Night Lamp.svg" alt="Cute Bear Night Lamp">
+  <img data-id="3" src="image/Bubble Candle.svg" alt="Bubble Candle">
+  <img data-id="4" src="image/Heart Photo Frame.svg" alt="Heart Photo Frame">
+  <img data-id="5" src="image/Chocolate Oreo Cake.svg" alt="Chocolate Oreo Cake">
+  <img data-id="6" src="image/Pastel Design Cake.svg" alt="Pastel Design Cake">
+  <img data-id="7" src="image/Crochet Flower Bouquet.svg" alt="Crochet Flower Bouquet">
+  <img data-id="8" src="image/Red Rose Bouquet.svg" alt="Red Rose Bouquet">
+  <img data-id="9" src="image/Cute Teddy Pair.svg" alt="Cute Teddy Pair">
+  <img data-id="10" src="image/Graduation Teddy.svg" alt="Graduation Teddy">
+  <img data-id="11" src="image/Balloon Decoration Set.svg" alt="Balloon Decoration Set">
+  <img data-id="12" src="image/Proposal Setup.svg" alt="Proposal Setup">
+  <img data-id="13" src="image/Chocolate Gift Box.svg" alt="Chocolate Gift Box">
+  <img data-id="14" src="image/Personalised Mug.svg" alt="Personalised Mug">
+  <img data-id="15" src="image/Greeting Card.svg" alt="Greeting Card">
+</div>
+<script src="js/store.js"></script>
+<script src="js/layout.js"></script>
+<script>
+
+if (S.requireLogin()) {
+  const draw = () => UI.giftGrid(document.getElementById('grid'), S.GIFTS.filter(g => S.favs().includes(g.id)), draw);
+  draw();
+}
+</script>
+</body>
+</html>
